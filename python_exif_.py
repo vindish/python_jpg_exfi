@@ -5,6 +5,7 @@ import json
 import requests
 import sys
 import hashlib
+import numpy as np
 
 
 def latitude_and_longitude_convert_to_decimal_system(*arg):
@@ -51,17 +52,18 @@ def find_GPS_image(pic_path):
                     deg, min, sec = [x.replace(' ', '') for x in str(value)[1:-1].split(',')]
                     GPS['GPSLongitude'] = latitude_and_longitude_convert_to_decimal_system(deg, min, sec)
             elif re.match('GPS GPSAltitude', tag):
-                GPS['GPSAltitude'] = str(value)
-                print('[*] GPS高度: ' + str(value))
+                GPS['GPSAltitude'] = int(str(value).split('/')[0])/int(str(value).split('/')[1])
+                print('[*] GPS高度: ' + str(int(str(value).split('/')[0])/int(str(value).split('/')[1])))
             elif re.match('GPS GPSImgDirectionRef', tag):
                 GPS['GPSImgDirectionRef'] = str(value)
                 print('[*] GPS方向Ref: ' + str(value))
             elif re.match('GPS GPSImgDirection', tag):
-                GPS['GPSImgDirection'] = str(value)
-                print('[*] GPS方向: ' + str(value))
+                GPS['GPSImgDirection'] = int(str(value).split('/')[0])/int(str(value).split('/')[1])
+                GPSImgDirection = int(str(value).split('/')[0])/int(str(value).split('/')[1])
+                print('[*] GPS方向: ' + str(GPSImgDirection))
             elif re.match('.*Date.*', tag):
                 date = str(value)
-    # print({'GPS_information': GPS, 'date_information': date})
+    print({'GPS_information': GPS, 'date_information': date})
     print('[*] 拍摄时间: ' + date)
     return {'GPS_information': GPS, 'date_information': date}
 
